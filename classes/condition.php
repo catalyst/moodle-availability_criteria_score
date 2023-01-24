@@ -92,7 +92,8 @@ class condition extends \core_availability\condition {
             return false;
         }
 
-        $filling = $DB->get_record('gradingform_guide_fillings', array('instanceid' => $gradinginstance->id, 'criterionid' => $criteria->id));
+        $filling = $DB->get_record('gradingform_guide_fillings',
+            array('instanceid' => $gradinginstance->id, 'criterionid' => $criteria->id));
         if ($filling == null) {
             return false;
         }
