@@ -36,11 +36,28 @@ require_once($CFG->dirroot . '/mod/assign/locallib.php');
  */
 class condition extends \core_availability\condition {
 
+    /**
+     * @var int Grade item ID
+     */
     protected $gradeitemid;
+    /**
+     * @var int Criterion ID
+     */
     protected $criterion;
+    /**
+     * @var int|null Score minimum
+     */
     protected $min;
+    /**
+     * @var int|null Score maximum
+     */
     protected $max;
 
+    /**
+     * Condition constructor.
+     *
+     * @param \stdClass $structure
+     */
     public function __construct($structure) {
         if (isset($structure->gradeitemid) && is_int($structure->gradeitemid)) {
             $this->gradeitemid = $structure->gradeitemid;
@@ -64,6 +81,16 @@ class condition extends \core_availability\condition {
         }
     }
 
+    /**
+     * Checks if the item is available, determined by whether the given user has the appropriate score
+     * awarded in the grade item criterion.
+     *
+     * @param bool $not Set true if we are inverting the condition
+     * @param info $info Item we are checking
+     * @param bool $grabthelot
+     * @param int $userid User ID to check availability for
+     * @return bool True if available
+     */
     public function is_available($not, info $info, $grabthelot, $userid) {
         global $DB;
 
@@ -108,6 +135,14 @@ class condition extends \core_availability\condition {
         return $allow;
     }
 
+    /**
+     * Returns a string describing the restriction.
+     *
+     * @param bool $full Set true if this is the 'full information' view
+     * @param bool $not Set true if we are inverting the condition
+     * @param info $info Item we are checking
+     * @return \lang_string|string
+     */
     public function get_description($full, $not, info $info) {
         global $DB;
 
@@ -139,10 +174,20 @@ class condition extends \core_availability\condition {
         return get_string('error_loading_requirements', 'availability_criteria_score');
     }
 
+    /**
+     * Returns the settings of this condition as a string for debugging.
+     *
+     * @return string
+     */
     protected function get_debug_string() {
         return $this->gradeitemid . '#' . $this->criterion . '-' . $this->min . '-' . $this->max;
     }
 
+    /**
+     * Saves condition settings to a structure object.
+     *
+     * @return \stdClass Structure object
+     */
     public function save() {
         $result = (object)array('type' => 'criterion');
         if ($this->gradeitemid) {
